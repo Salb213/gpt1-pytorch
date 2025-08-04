@@ -1,2 +1,2 @@
-# gpt1-pytorch
-A full PyTorch reimplementation of GPT-1 from scratch for my Maturaarbeit and Stanford application. Includes custom tokenizer, transformer architecture, training loop, and evaluation tools.
+# GPT-1 from Scratch
+This is my own GPT-1 built in PyTorch.
