@@ -1,1 +1,1 @@
-# TODO: Write logging helpers (optional)
+# TODO: Write logging helpers
