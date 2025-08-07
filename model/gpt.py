@@ -65,7 +65,7 @@ class FeedForward(nn.Module):
     def forward(self, x):
         return self.net(x)
 
-class Block:
+class Block(nn.Module):
     def __init__(self, n_embd, n_head, block_size):
         super().__init__()
         self.ln1 = nn.LayerNorm(n_embd)
@@ -78,7 +78,7 @@ class Block:
         x = x+self.ffwd(self.ln2(x))
         return x
 
-class GPT:
+class GPT(nn.Module):
     def __init__(self, config):
         super().__init__()
         self.token_embedding_table = nn.Embedding(config.vocab_size, config.n_embd)
