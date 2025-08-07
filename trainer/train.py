@@ -6,9 +6,12 @@ import pickle
 import torch
 import torch.nn as nn
 from model.gpt import GPT, GPTConfig
+import torch.nn.functional as F
 
 block_size = 64
 batch_size = 32
+max_iters = 5000
+eval_interval = 100
 
 train_data = np.fromfile("data/processed/train.bin", dtype=np.uint16)
 val_data = np.fromfile("data/processed/val.bin", dtype=np.uint16)
@@ -41,3 +44,18 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model = model.to(device)
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
+
+for step in range(max_iters):
+    x,y = get_batch("train", batch_size, block_size)
+    x,y = x.to(device), y.to(device)
+
+    logits = model(x)
+    loss = F.cross_entropy(logits.view(-1, logits.size(-1)), y.view(-1))
+
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+
+    if step % eval_interval == 0 or step == max_iters - 1:
+        print(f"Step {step:4d} | Train Loss: {loss.item():4f}")
+        
