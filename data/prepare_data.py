@@ -1,4 +1,4 @@
-from tokenizer.tokenizer import CharTokenizer
+from tokenizer.tokenizer import Tokenizer
 import numpy as np
 import os
 import pickle
@@ -10,7 +10,7 @@ with open(file_path, "r", encoding="utf-8") as f:
 
 print("First 100 Chars:\n", text[:100])
 
-tokenizer = CharTokenizer(text)
+tokenizer = Tokenizer(text)
 
 data = tokenizer.encoded(text)
 
