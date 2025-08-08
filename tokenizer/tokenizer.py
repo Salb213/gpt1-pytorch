@@ -9,7 +9,6 @@ class Tokenizer:
             vocab[" ".join(list(word)) + " </w>"] += 1
 
         self.vocab = vocab
-        self.vocab_size = vocab_size
 
 
         self.merges = []
@@ -24,6 +23,15 @@ class Tokenizer:
         symbols = self.get_symbols()
         self.encoder = {sym: i for i, sym in enumerate(symbols)}
         self.decoder = {i: sym for sym, i in self.encoder.items()}
+        
+        special_tokens = ["<bos>", "<eos>", "<pad>"]
+        for tok in special_tokens:
+            if tok not in self.encoder:
+                idx = len(self.encoder)
+                self.encoder[tok] = idx
+                self.decoder[idx] = tok
+
+        self.vocab_size = len(self.encoder)
 
     def get_stats(self):
         pairs = Counter()
@@ -48,8 +56,10 @@ class Tokenizer:
             symbols.update(word.split())
         return symbols
 
-    def encode(self, text):
+    def encode(self, text, add_special_tokens=True):
         tokens = []
+        if add_special_tokens:
+            tokens.append(self.encoder["<bos>"]) 
         for word in text.split():
             chars = list(word) + ["</w>"]
             i = 0
@@ -59,14 +69,21 @@ class Tokenizer:
                     j += 1
                 tokens.append(self.encoder["".join(chars[i:j-1])])
                 i = j - 1
+        if add_special_tokens:
+            tokens.append(self.encoder["<eos>"])
         return tokens
 
     def decode(self, token_ids):
-        words = []
+        parts = []
         for idx in token_ids:
-            word = self.decoder[idx]
-            if word == "</w>":
+            sym = self.decoder[idx]
+            if sym == "<bos>" or sym == "<pad>":
                 continue
-            words.append(word)
-        return "".join(words)
+            if sym == "<eos>":
+                break
+            if sym.endswith("</w>"):
+                parts.append(sym[:-4] + " ")
+            else:
+                parts.append(sym)
+        return "".join(parts).strip()
 

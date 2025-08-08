@@ -12,8 +12,8 @@ import wandb
 
 block_size = 64
 batch_size = 32
-max_iters = 5000000
-eval_interval = 100
+max_iters = 52_500
+eval_interval = 500
 
 checkpoint_path = "experiments/checkpoints/gpt1_checkpoint.pt"
 

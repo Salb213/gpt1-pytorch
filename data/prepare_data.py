@@ -1,3 +1,6 @@
+import sys
+sys.path.append(".")
+
 from tokenizer.tokenizer import Tokenizer
 import numpy as np
 import os
@@ -12,7 +15,9 @@ print("First 100 Chars:\n", text[:100])
 
 tokenizer = Tokenizer(text)
 
-data = tokenizer.encoded(text)
+data = tokenizer.encode(text)
+print("Max token id:", max(data), "Vocab size:", tokenizer.vocab_size)
+assert max(data) < tokenizer.vocab_size, "Token IDs exceed vocab size!"
 
 n = len(data)
 
