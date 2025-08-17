@@ -13,7 +13,7 @@ with open(file_path, "r", encoding="utf-8") as f:
 
 print("First 100 Chars:\n", text[:100])
 
-tokenizer = Tokenizer(text)
+tokenizer = Tokenizer()
 
 data = tokenizer.encode(text)
 print("Max token id:", max(data), "Vocab size:", tokenizer.vocab_size)
